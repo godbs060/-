@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>장해윤 (Haeyun Jang) | 포트폴리오 & FestaGraph</title>
+  <meta name="description" content="고려대학교 서어서문학과 장해윤의 디지털인문학 지식그래프(FestaGraph) 및 개인 포트폴리오 웹사이트">
+  <meta property="og:title" content="장해윤 (Haeyun Jang) | 포트폴리오 & FestaGraph">
+  <meta property="og:description" content="인문학적 통찰과 데이터로 문화·콘텐츠의 연결고리를 만듭니다.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vis.js Network CDN -->
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans KR"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    #network-container {
+      width: 100%;
+      height: 600px;
+      background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f8fafc 100%);
+      border-radius: 1rem;
+    }
+    .badge-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .badge-chip:hover {
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen flex flex-col">
+
+  <!-- ==================== STICKY HEADER ==================== -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/90 border-b border-slate-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <a href="#" class="group flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-slate-900">
+        <span class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm shadow-md group-hover:scale-105 group-hover:bg-indigo-700 transition-all">
+          H
+        </span>
+        <span class="tracking-wider text-slate-900 group-hover:text-indigo-600 transition-colors">HY.JANG</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+        <a href="#about" class="hover:text-indigo-600 transition-colors">About</a>
+        <a href="#projects" class="hover:text-indigo-600 transition-colors">Projects</a>
+        <a href="#explorer" class="hover:text-indigo-600 transition-colors">Data Explorer</a>
+        <a href="mailto:godbs060@korea.ac.kr" class="px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-indigo-600 transition-all text-xs font-semibold tracking-wide shadow-sm hover:shadow">
+          Contact Me
+        </a>
+      </nav>
+
+      <!-- Mobile Hamburger Button -->
+      <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-slate-900 p-2 focus:outline-none" aria-label="메뉴 열기">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-b border-slate-200 bg-white/95 backdrop-blur-md px-6 py-4 space-y-3">
+      <a href="#about" class="mobile-link block text-base font-medium text-slate-700 hover:text-indigo-600">About (자기소개)</a>
+      <a href="#projects" class="mobile-link block text-base font-medium text-slate-700 hover:text-indigo-600">Projects (프로젝트)</a>
+      <a href="#explorer" class="mobile-link block text-base font-medium text-slate-700 hover:text-indigo-600">Data Explorer (데이터 탐색)</a>
+      <div class="pt-2 border-t border-slate-100 flex gap-3">
+        <a href="mailto:godbs060@korea.ac.kr" class="flex-1 text-center py-2 text-sm font-semibold rounded-lg bg-indigo-600 text-white">이메일 보내기</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <!-- ==================== HERO & ABOUT SECTION ==================== -->
+    <section id="about" class="pt-14 pb-20 md:pt-20 md:pb-28">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Left: Hero Headline & Intro -->
+          <div class="lg:col-span-7 space-y-6">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-100/80 text-indigo-700 text-xs font-semibold tracking-wide shadow-xs">
+              <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+              Humanities meets Knowledge Graph
+            </div>
+            
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-[1.22] tracking-tight">
+              인문학적 통찰과 데이터로<br class="hidden sm:inline"> 
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-600">문화·콘텐츠의 연결고리</span>를<br class="hidden sm:inline"> 만듭니다.
+            </h1>
+            
+            <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl">
+              고려대학교 서어서문학과에서 언어와 텍스트의 맥락을 배우고, 디지털 인문학 연구를 통해 복잡한 문화 현상을 지식그래프로 구조화합니다. 문화·콘텐츠 기획의 새로운 가치를 탐구하는 예비 기획자 <strong>장해윤</strong>입니다.
+            </p>
+
+            <!-- Quick Action & Social Links -->
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <a href="mailto:godbs060@korea.ac.kr" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 shadow-md shadow-indigo-100 hover:shadow-indigo-200 transition-all">
+                <i class="fa-regular fa-envelope"></i>
+                godbs060@korea.ac.kr
+              </a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4.5 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 font-medium text-sm hover:border-slate-300 hover:bg-slate-50 shadow-xs transition-all">
+                <i class="fa-brands fa-linkedin text-blue-600 text-base"></i>
+                LinkedIn
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4.5 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 font-medium text-sm hover:border-slate-300 hover:bg-slate-50 shadow-xs transition-all">
+                <i class="fa-brands fa-instagram text-pink-500 text-base"></i>
+                Instagram
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: Profile Card -->
+          <div class="lg:col-span-5">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/60 border border-slate-100 relative overflow-hidden transition-all hover:shadow-2xl hover:shadow-indigo-100/40">
+              <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full blur-3xl pointer-events-none opacity-60"></div>
+
+              <div class="flex items-center gap-4 pb-6 border-b border-slate-100">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center text-white text-2xl font-bold shadow-md">
+                  해윤
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    장해윤 <span class="text-sm font-normal text-slate-500">Haeyun Jang</span>
+                  </h3>
+                  <p class="text-sm text-indigo-600 font-medium mt-0.5">고려대학교 서어서문학과 (26학번)</p>
+                </div>
+              </div>
+
+              <!-- Metadata Grid -->
+              <div class="py-5 space-y-4 text-sm">
+                <div>
+                  <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block mb-1">Career Goal</span>
+                  <p class="text-slate-800 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-briefcase text-indigo-500 text-xs"></i>
+                    문화/콘텐츠 기획 · 대기업 · 서울
+                  </p>
+                </div>
+
+                <div>
+                  <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block mb-2">Interests & Identity</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="badge-chip bg-slate-100 text-slate-700">#INTP</span>
+                    <span class="badge-chip bg-indigo-50 text-indigo-700 border border-indigo-100">#공연_음악</span>
+                    <span class="badge-chip bg-violet-50 text-violet-700 border border-violet-100">#데이터시각화</span>
+                    <span class="badge-chip bg-amber-50 text-amber-700 border border-amber-100">#Gemini</span>
+                    <span class="badge-chip bg-emerald-50 text-emerald-700 border border-emerald-100">#FestaGraph</span>
+                  </div>
+                </div>
+
+                <div>
+                  <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block mb-2">Taste & Lifestyle</span>
+                  <div class="flex flex-wrap gap-2 text-xs text-slate-600 font-medium">
+                    <span class="px-2.5 py-1.5 bg-red-50 text-red-600 rounded-lg border border-red-100 flex items-center gap-1">
+                      🍲 마라샹궈
+                    </span>
+                    <span class="px-2.5 py-1.5 bg-sky-50 text-sky-600 rounded-lg border border-sky-100 flex items-center gap-1">
+                      🎧 음악 디깅
+                    </span>
+                    <span class="px-2.5 py-1.5 bg-rose-50 text-rose-600 rounded-lg border border-rose-100 flex items-center gap-1">
+                      ✈️ 일본 여행
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
+                <span>Digital Humanities Portfolio</span>
+                <span class="flex items-center gap-1.5 text-emerald-600 font-semibold">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                  Open to Opportunities
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PROJECTS SECTION ==================== -->
+    <section id="projects" class="py-20 bg-slate-100/70 border-y border-slate-200/70">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="max-w-2xl mb-12">
+          <div class="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-indigo-600 uppercase mb-2">
+            <i class="fa-solid fa-folder-open"></i> Projects & Research
+          </div>
+          <p class="text-3xl font-extrabold text-slate-900 tracking-tight">지식그래프로 조망하는 문화 데이터</p>
+          <p class="text-sm text-slate-500 mt-2">인문학적 질문을 데이터 모델링과 시각화로 풀어낸 핵심 프로젝트입니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <!-- Main Project Card (Span 2) -->
+          <div class="lg:col-span-2 bg-white rounded-3xl p-7 sm:p-9 border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                  메인 연구 프로젝트
+                </span>
+                <span class="text-xs font-medium text-slate-400 flex items-center gap-1">
+                  <i class="fa-regular fa-calendar"></i> 2026.03 - 2026.06
+                </span>
+              </div>
+
+              <h3 class="text-2xl font-bold text-slate-900 mb-3 leading-snug">
+                2026 전국 주요 대학 축제 및 출연 아티스트 지식그래프 구축 (FestaGraph)
+              </h3>
+              
+              <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                2026년 전국 주요 대학 축제의 라인업 및 공연 정보 데이터를 온톨로지 기반 지식그래프(Neo4j)로 모델링하여, 지역 간 문화 소비 양극화와 취향 기반 아티스트 섭외 현상을 입체적으로 규명한 디지털 인문학 프로젝트입니다.
+              </p>
+
+              <!-- My Role & Key Questions -->
+              <div class="space-y-5 mb-8">
+                <!-- My Role -->
+                <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+                  <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2.5 flex items-center gap-2">
+                    <i class="fa-solid fa-user-check text-indigo-600 text-sm"></i>
+                    내 역할 (My Contribution)
+                  </h4>
+                  <ul class="text-xs text-slate-600 space-y-2 list-none pl-1">
+                    <li class="flex items-start gap-2">
+                      <span class="text-indigo-600 font-bold">•</span>
+                      <span><strong class="text-slate-800">기획 및 일정/마일스톤 수립</strong>: 연구 범위 정의, 스프린트 계획 및 전체 진행 로드맵 총괄</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-indigo-600 font-bold">•</span>
+                      <span><strong class="text-slate-800">데이터 수집 및 정제</strong>: 수도권/비수도권 8개 권역 대학 축제 라인업 및 개최 정보 수작업 인덱싱 & 클렌징</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-indigo-600 font-bold">•</span>
+                      <span><strong class="text-slate-800">10주차 시각화 총괄 책임</strong>: 온톨로지 기반 네트워크 레이아웃 기획 및 Vis.js 기반 인터랙티브 시각화 완성</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Key Questions -->
+                <div class="bg-indigo-50/50 rounded-2xl p-5 border border-indigo-100/70">
+                  <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-900 mb-2.5 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-question text-indigo-600 text-sm"></i>
+                    프로젝트 핵심 질문 (Key Questions)
+                  </h4>
+                  <ol class="text-xs text-slate-700 space-y-2 list-decimal list-inside pl-1">
+                    <li><strong class="text-slate-800">수도권 vs 비수도권 축제</strong>: 공통 출연 아티스트 비율 및 장르적 다양성 차이 분석</li>
+                    <li><strong class="text-slate-800">2026 대학 축제 최다 출연 아티스트</strong>: 대표 음악 장르와 세대 공감대 형성 요인 규명</li>
+                    <li><strong class="text-slate-800">K-POP(아이돌) 섭외 대학의 지리적 분포</strong>: 예산 규모 및 권역별 섭외 편중 양상 비교</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tech Stack Tags & CTA -->
+            <div class="pt-5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="px-2.5 py-1 text-xs rounded-md bg-slate-100 font-medium text-slate-700">Neo4j</span>
+                <span class="px-2.5 py-1 text-xs rounded-md bg-slate-100 font-medium text-slate-700">Cypher</span>
+                <span class="px-2.5 py-1 text-xs rounded-md bg-slate-100 font-medium text-slate-700">Gemini AI</span>
+                <span class="px-2.5 py-1 text-xs rounded-md bg-slate-100 font-medium text-slate-700">Vis.js</span>
+                <span class="px-2.5 py-1 text-xs rounded-md bg-slate-100 font-medium text-slate-700">Digital Humanities</span>
+              </div>
+              <a href="#explorer" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1.5 transition-colors">
+                지식그래프 탐색하기 <i class="fa-solid fa-arrow-down text-[10px]"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Coming Soon Expansion Card (Span 1) -->
+          <div class="bg-white/60 border-2 border-dashed border-slate-300 rounded-3xl p-7 sm:p-9 flex flex-col justify-between items-center text-center hover:border-indigo-400 hover:bg-white transition-all group">
+            <div class="my-auto py-8">
+              <div class="w-16 h-16 mx-auto rounded-2xl bg-slate-100 group-hover:bg-indigo-50 group-hover:text-indigo-600 text-slate-400 flex items-center justify-center text-2xl mb-4 transition-all">
+                <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform duration-300"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-800 mb-2">+ Coming Soon</h3>
+              <p class="text-xs text-slate-500 max-w-xs leading-relaxed mb-4">
+                스페인어권 문화콘텐츠 트렌드 분석 및 글로벌 엔터테인먼트 온톨로지 연구가 예정되어 있습니다.
+              </p>
+              <span class="text-[11px] font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-full uppercase tracking-wider">
+                Next Milestone
+              </span>
+            </div>
+
+            <div class="w-full pt-4 border-t border-slate-100 text-xs text-slate-400">
+              Career & Project Portfolio
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== INTERACTIVE DATA EXPLORER SECTION ==================== -->
+    <section id="explorer" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header & Intro -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-indigo-600 uppercase mb-2">
+              <i class="fa-solid fa-diagram-project"></i> Interactive Graph Visualizer
+            </div>
+            <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">FestaGraph 지식그래프 탐색기</h2>
+            <p class="text-sm text-slate-500 mt-1.5 flex flex-wrap items-center gap-1.5">
+              <span class="font-medium text-slate-700">온톨로지 체계:</span>
+              <span class="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-700">[지역] -[위치함]→ [대학] -[개최함]→ [축제] -[출연함]→ [아티스트] -[속함]→ [장르]</span>
+            </p>
+          </div>
+
+          <!-- Color Legend -->
+          <div class="flex flex-wrap gap-2.5 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200 shadow-xs">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-500 shadow-xs"></span> 지역</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-purple-500 shadow-xs"></span> 대학</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-teal-500 shadow-xs"></span> 축제</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 shadow-xs"></span> 아티스트</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500 shadow-xs"></span> 장르</span>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 mb-6 space-y-4">
+          <!-- Genre Filters -->
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <span class="text-xs font-semibold text-slate-600 w-20 flex items-center gap-1">
+              <i class="fa-solid fa-music text-indigo-500"></i> 음악장르
+            </span>
+            <div class="flex flex-wrap gap-1.5" id="genre-filters">
+              <button class="filter-genre-btn active px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 text-white shadow-sm transition-all" data-genre="all">전체</button>
+              <button class="filter-genre-btn px-3.5 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-all" data-genre="밴드">밴드 (Band)</button>
+              <button class="filter-genre-btn px-3.5 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-all" data-genre="K-POP">K-POP (아이돌)</button>
+              <button class="filter-genre-btn px-3.5 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-all" data-genre="발라드">발라드 (Ballad)</button>
+              <button class="filter-genre-btn px-3.5 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-all" data-genre="힙합">힙합 (Hip-hop)</button>
+            </div>
+          </div>
+
+          <!-- Region Filters -->
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3 pt-3 border-t border-slate-200/60">
+            <span class="text-xs font-semibold text-slate-600 w-20 flex items-center gap-1">
+              <i class="fa-solid fa-location-dot text-indigo-500"></i> 대학권역
+            </span>
+            <div class="flex flex-wrap gap-1.5" id="region-filters">
+              <button class="filter-region-btn active px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 text-white shadow-sm transition-all" data-region="all">전체</button>
+              <button class="filter-region-btn px-3.5 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-all" data-region="수도권">수도권</button>
+              <button class="filter-region-btn px-3.5 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-all" data-region="영남권">영남권</button>
+              <button class="filter-region-btn px-3.5 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-all" data-region="호남권">호남권</button>
+              <button class="filter-region-btn px-3.5 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-all" data-region="충청권">충청권</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vis Network & Detail Card Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Graph Container (Span 8) -->
+          <div class="lg:col-span-8 bg-slate-50 border border-slate-200 rounded-2xl p-2.5 relative shadow-inner overflow-hidden">
+            <div id="network-container"></div>
+            <!-- Graph Tooltip Note -->
+            <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200/90 text-[11px] text-slate-600 shadow-sm flex items-center gap-2">
+              <i class="fa-solid fa-circle-info text-indigo-500"></i>
+              <span>마우스 휠(줌), 노드 드래그 및 클릭 시 우측 인스펙터에 상세 정보가 표출됩니다.</span>
+            </div>
+          </div>
+
+          <!-- Node Detail Panel (Span 4) -->
+          <div class="lg:col-span-4 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm min-h-[600px] flex flex-col justify-between" id="detail-panel">
+            <div>
+              <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                  <i class="fa-solid fa-magnifying-glass"></i> Node Inspector
+                </span>
+                <span id="detail-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 transition-colors">
+                  선택 대기
+                </span>
+              </div>
+              
+              <div id="detail-empty" class="text-center py-24 text-slate-400 space-y-3">
+                <div class="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto text-slate-300 text-2xl">
+                  <i class="fa-regular fa-hand-pointer"></i>
+                </div>
+                <p class="text-sm font-medium text-slate-500">
+                  그래프에서 노드를 클릭하면<br>상세 온톨로지 속성이 표시됩니다.
+                </p>
+                <p class="text-xs text-slate-400">예: 고려대학교, 아이브, 백마대동제 등</p>
+              </div>
+
+              <div id="detail-content" class="hidden space-y-5">
+                <div>
+                  <h3 id="detail-title" class="text-2xl font-bold text-slate-900 mb-1 leading-tight">개체명</h3>
+                  <p id="detail-subtitle" class="text-xs font-semibold text-indigo-600">온톨로지 클래스</p>
+                </div>
+                
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 space-y-3 text-xs">
+                  <div class="flex justify-between items-center pb-2 border-b border-slate-200/50">
+                    <span class="text-slate-500 font-medium" id="detail-label1">속성 1</span>
+                    <span id="detail-prop1" class="font-semibold text-slate-800 text-right">-</span>
+                  </div>
+                  <div class="flex justify-between items-center pb-2 border-b border-slate-200/50">
+                    <span class="text-slate-500 font-medium" id="detail-label2">속성 2</span>
+                    <span id="detail-prop2" class="font-semibold text-slate-800 text-right">-</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-slate-500 font-medium">연결 관계 (Degree)</span>
+                    <span id="detail-prop3" class="font-semibold text-indigo-600 text-right">-</span>
+                  </div>
+                </div>
+
+                <div>
+                  <h5 class="text-xs font-bold text-slate-700 uppercase mb-2 flex items-center gap-1.5">
+                    <i class="fa-regular fa-file-lines text-indigo-500"></i> 상세 속성 및 분석 메모
+                  </h5>
+                  <p id="detail-desc" class="text-xs text-slate-700 bg-indigo-50/50 p-3.5 rounded-xl leading-relaxed border border-indigo-100/60">
+                    메모 내용이 나타납니다.
+                  </p>
+                </div>
+
+                <!-- Related connections box -->
+                <div id="detail-neighbors-box">
+                  <h5 class="text-xs font-bold text-slate-700 uppercase mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrows-split-up-and-left text-indigo-500"></i> 인접 연결 노드
+                  </h5>
+                  <div id="detail-neighbors" class="flex flex-wrap gap-1.5">
+                    <!-- Populated dynamically -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Graph Actions -->
+            <div class="pt-5 border-t border-slate-100 space-y-2">
+              <button id="reset-graph-btn" class="w-full py-2.5 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-arrows-rotate"></i> 뷰 초기화 (Center & Fit Graph)
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-slate-200 py-12 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="text-lg font-bold tracking-tight text-slate-900 block">HAEYUN JANG</span>
+          <p class="text-xs text-slate-500 mt-1">
+            Built for Digital Humanities & Creative Content Strategy.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-6 text-sm text-slate-600 font-medium">
+          <a href="mailto:godbs060@korea.ac.kr" class="hover:text-indigo-600 transition-colors flex items-center gap-1.5">
+            <i class="fa-regular fa-envelope"></i> Email
+          </a>
+          <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 transition-colors flex items-center gap-1.5">
+            <i class="fa-brands fa-linkedin"></i> LinkedIn
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 transition-colors flex items-center gap-1.5">
+            <i class="fa-brands fa-instagram"></i> Instagram
+          </a>
+          <a href="#" class="hover:text-indigo-600 transition-colors flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up"></i> Top
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-8 pt-8 border-t border-slate-100 text-center md:text-left text-xs text-slate-400">
+        &copy; 2026 Haeyun Jang. All rights reserved. Built for Digital Humanities & Creative Content. Powered by Neo4j Ontological Framework & Vis.js.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    // --- Mobile Menu Toggle ---
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+    });
+
+    // ==========================================
+    // EXTENSIBLE DATA MODEL (FestaGraph Ontology)
+    // ==========================================
+    const graphData = {
+      // Color Palette for node types
+      colors: {
+        region: { background: '#94a3b8', border: '#64748b' },      // Slate
+        univ: { background: '#a855f7', border: '#7e22ce' },        // Purple
+        festival: { background: '#14b8a6', border: '#0f766e' },    // Teal
+        artist: { background: '#f59e0b', border: '#d97706' },      // Amber
+        genre: { background: '#f43f5e', border: '#be123c' }        // Rose
+      },
+
+      // Nodes List
+      nodes: [
+        // 1. Regions
+        { id: 'reg_seoul', label: '수도권', group: 'region', type: '지역', info: { desc: '서울 및 경기 주요 대학 거점 권역' } },
+        { id: 'reg_yeongnam', label: '영남권', group: 'region', type: '지역', info: { desc: '부산 및 대구·경북 거점 국립대 중심 권역' } },
+        { id: 'reg_honam', label: '호남권', group: 'region', type: '지역', info: { desc: '광주 및 전남 거점 국립대 중심 권역' } },
+        { id: 'reg_chungcheong', label: '충청권', group: 'region', type: '지역', info: { desc: '대전 및 충남 거점 국립대 중심 권역' } },
+
+        // 2. Universities
+        { id: 'u_korea', label: '고려대학교', group: 'univ', region: '수도권', type: '대학', info: { loc: '서울 성북구', desc: '민족고대, 전통의 응원 축제 및 대동제 개최' } },
+        { id: 'u_yonsei', label: '연세대학교', group: 'univ', region: '수도권', type: '대학', info: { loc: '서울 서대문구', desc: '신촌 축제의 중심 아카라카 개최' } },
+        { id: 'u_hongik', label: '홍익대학교', group: 'univ', region: '수도권', type: '대학', info: { loc: '서울 마포구', desc: '홍대 인디/힙합 서브컬처 문화 발신지' } },
+        { id: 'u_khu', label: '경희대학교', group: 'univ', region: '수도권', type: '대학', info: { loc: '서울 동대문구', desc: '평화의전당 및 대규모 야외 캠퍼스 축제' } },
+        { id: 'u_pnu', label: '부산대학교', group: 'univ', region: '영남권', type: '대학', info: { loc: '부산 금정구', desc: '영남권 거점 대표 대동제 축제 개최' } },
+        { id: 'u_knu', label: '경북대학교', group: 'univ', region: '영남권', type: '대학', info: { loc: '대구 북구', desc: '대구·경북권 최대 규모 대동제 개최' } },
+        { id: 'u_jnu', label: '전남대학교', group: 'univ', region: '호남권', type: '대학', info: { loc: '광주 북구', desc: '호남권 대표 청춘 페스티벌 대동제' } },
+        { id: 'u_cnu', label: '충남대학교', group: 'univ', region: '충청권', type: '대학', info: { loc: '대전 유성구', desc: '충청권 중심 백마대동제 개최' } },
+
+        // 3. Festivals
+        { id: 'f_ipsilenti', label: '입실렌티 (지·야·의·성)', group: 'festival', type: '축제', info: { period: '2026.05', desc: '고려대학교 녹지운동장 대규모 응원 축제' } },
+        { id: 'f_granite', label: '석탑대동제', group: 'festival', type: '축제', info: { period: '2026.05', desc: '고려대학교 서울캠퍼스 봄 대동제' } },
+        { id: 'f_akaraka', label: '아카라카를 온누리에', group: 'festival', type: '축제', info: { period: '2026.05', desc: '연세대학교 노천극장 응원축제' } },
+        { id: 'f_wow', label: '와우대동제', group: 'festival', type: '축제', info: { period: '2026.05', desc: '홍익대학교 예술과 음악의 대동제' } },
+        { id: 'f_master', label: '마스터피스 (경희)', group: 'festival', type: '축제', info: { period: '2026.05', desc: '경희대학교 서울캠퍼스 봄 정기축제' } },
+        { id: 'f_pnu_fest', label: '효원대동제 (부산대)', group: 'festival', type: '축제', info: { period: '2026.05', desc: '부산대학교 넉넉한터 대동제' } },
+        { id: 'f_knu_fest', label: '대동제 (경북대)', group: 'festival', type: '축제', info: { period: '2026.05', desc: '경북대학교 일청담 및 대운동장 대동제' } },
+        { id: 'f_jnu_fest', label: '용봉대동제 (전남대)', group: 'festival', type: '축제', info: { period: '2026.05', desc: '전남대학교 5.18 광장 대동제' } },
+        { id: 'f_cnu_fest', label: '백마대동제 (충남대)', group: 'festival', type: '축제', info: { period: '2026.05', desc: '충남대학교 대운동장 봄 대동제' } },
+
+        // 4. Artists
+        { id: 'a_lucy', label: 'LUCY (루시)', group: 'artist', genre: '밴드', type: '아티스트', info: { agency: '미스틱스토리', desc: '청량한 바이올린 사운드의 4인조 밴드, 대학 축제 인기 밴드' } },
+        { id: 'a_silica', label: '실리카겔', group: 'artist', genre: '밴드', type: '아티스트', info: { agency: '매직스트로베리', desc: '사이키델릭 록과 파워풀한 무대 장악력의 밴드' } },
+        { id: 'a_day6', label: 'DAY6', group: 'artist', genre: '밴드', type: '아티스트', info: { agency: 'JYP엔터테인먼트', desc: '전 세대 떼창을 이끄는 대학 축제 섭외 1순위 대표 밴드' } },
+        { id: 'a_ive', label: '아이브 (IVE)', group: 'artist', genre: 'K-POP', type: '아티스트', info: { agency: '스타쉽엔터테인먼트', desc: '대중성과 화제성을 모두 사로잡은 4세대 대표 걸그룹' } },
+        { id: 'a_aespa', label: '에스파 (aespa)', group: 'artist', genre: 'K-POP', type: '아티스트', info: { agency: 'SM엔터테인먼트', desc: '독보적 메타버스 세계관과 강렬한 퍼포먼스' } },
+        { id: 'a_sung', label: '성시경', group: 'artist', genre: '발라드', type: '아티스트', info: { agency: '에스케이재원', desc: '감성 발라드의 정점과 축제의 낭만을 장식하는 보컬리스트' } },
+        { id: 'a_changmo', label: '창모 (CHANGMO)', group: 'artist', genre: '힙합', type: '아티스트', info: { agency: '앰비션뮤직', desc: '열광적인 피아노 랩 비트와 대학가 힙합 에너지 폭발' } },
+        { id: 'a_zico', label: '지코 (ZICO)', group: 'artist', genre: '힙합', type: '아티스트', info: { agency: 'KOZ엔터테인먼트', desc: '축제 분위기 메이커 힙합 & 히트곡 제조 프로듀서' } },
+
+        // 5. Genres
+        { id: 'g_band', label: '밴드 (Band)', group: 'genre', type: '장르', info: { desc: '라이브 악기 세션 중심의 에너지 넘치는 음악' } },
+        { id: 'g_kpop', label: 'K-POP (아이돌)', group: 'genre', type: '장르', info: { desc: '대중성과 화제성을 견인하는 아이돌 퍼포먼스' } },
+        { id: 'g_ballad', label: '발라드 (Ballad)', group: 'genre', type: '장르', info: { desc: '서정적 멜로디와 보컬 감성 중심의 음악' } },
+        { id: 'g_hiphop', label: '힙합 (Hip-hop)', group: 'genre', type: '장르', info: { desc: '역동적인 랩과 강렬한 비트의 클럽 사운드' } }
+      ],
+
+      // Edges (Relations)
+      edges: [
+        // Region -> Univ (위치함)
+        { from: 'reg_seoul', to: 'u_korea', label: '위치함' },
+        { from: 'reg_seoul', to: 'u_yonsei', label: '위치함' },
+        { from: 'reg_seoul', to: 'u_hongik', label: '위치함' },
+        { from: 'reg_seoul', to: 'u_khu', label: '위치함' },
+        { from: 'reg_yeongnam', to: 'u_pnu', label: '위치함' },
+        { from: 'reg_yeongnam', to: 'u_knu', label: '위치함' },
+        { from: 'reg_honam', to: 'u_jnu', label: '위치함' },
+        { from: 'reg_chungcheong', to: 'u_cnu', label: '위치함' },
+
+        // Univ -> Festival (개최함)
+        { from: 'u_korea', to: 'f_ipsilenti', label: '개최함' },
+        { from: 'u_korea', to: 'f_granite', label: '개최함' },
+        { from: 'u_yonsei', to: 'f_akaraka', label: '개최함' },
+        { from: 'u_hongik', to: 'f_wow', label: '개최함' },
+        { from: 'u_khu', to: 'f_master', label: '개최함' },
+        { from: 'u_pnu', to: 'f_pnu_fest', label: '개최함' },
+        { from: 'u_knu', to: 'f_knu_fest', label: '개최함' },
+        { from: 'u_jnu', to: 'f_jnu_fest', label: '개최함' },
+        { from: 'u_cnu', to: 'f_cnu_fest', label: '개최함' },
+
+        // Festival -> Artist (출연함)
+        // 입실렌티 (고려대)
+        { from: 'f_ipsilenti', to: 'a_day6', label: '출연함' },
+        { from: 'f_ipsilenti', to: 'a_aespa', label: '출연함' },
+        { from: 'f_ipsilenti', to: 'a_changmo', label: '출연함' },
+        
+        // 석탑대동제 (고려대)
+        { from: 'f_granite', to: 'a_lucy', label: '출연함' },
+        { from: 'f_granite', to: 'a_silica', label: '출연함' },
+
+        // 아카라카 (연세대)
+        { from: 'f_akaraka', to: 'a_ive', label: '출연함' },
+        { from: 'f_akaraka', to: 'a_day6', label: '출연함' },
+        { from: 'f_akaraka', to: 'a_zico', label: '출연함' },
+
+        // 와우대동제 (홍익대)
+        { from: 'f_wow', to: 'a_silica', label: '출연함' },
+        { from: 'f_wow', to: 'a_changmo', label: '출연함' },
+
+        // 경희대
+        { from: 'f_master', to: 'a_lucy', label: '출연함' },
+        { from: 'f_master', to: 'a_sung', label: '출연함' },
+
+        // 부산대 (영남권)
+        { from: 'f_pnu_fest', to: 'a_day6', label: '출연함' },
+        { from: 'f_pnu_fest', to: 'a_changmo', label: '출연함' },
+
+        // 경북대 (영남권)
+        { from: 'f_knu_fest', to: 'a_ive', label: '출연함' },
+        { from: 'f_knu_fest', to: 'a_sung', label: '출연함' },
+
+        // 전남대 (호남권)
+        { from: 'f_jnu_fest', to: 'a_day6', label: '출연함' },
+        { from: 'f_jnu_fest', to: 'a_zico', label: '출연함' },
+
+        // 충남대 (충청권)
+        { from: 'f_cnu_fest', to: 'a_lucy', label: '출연함' },
+        { from: 'f_cnu_fest', to: 'a_ive', label: '출연함' },
+
+        // Artist -> Genre (속함)
+        { from: 'a_lucy', to: 'g_band', label: '속함' },
+        { from: 'a_silica', to: 'g_band', label: '속함' },
+        { from: 'a_day6', to: 'g_band', label: '속함' },
+        { from: 'a_ive', to: 'g_kpop', label: '속함' },
+        { from: 'a_aespa', to: 'g_kpop', label: '속함' },
+        { from: 'a_sung', to: 'g_ballad', label: '속함' },
+        { from: 'a_changmo', to: 'g_hiphop', label: '속함' },
+        { from: 'a_zico', to: 'g_hiphop', label: '속함' },
+      ]
+    };
+
+    // ==========================================
+    // VIS.JS INITIALIZATION & INTERACTION LOGIC
+    // ==========================================
+    let networkInstance = null;
+    let selectedGenre = 'all';
+    let selectedRegion = 'all';
+
+    const container = document.getElementById('network-container');
+
+    function formatNodes(nodeList = graphData.nodes) {
+      return nodeList.map(n => {
+        const colorConf = graphData.colors[n.group] || { background: '#64748b', border: '#475569' };
+        let size = 18;
+        let shape = 'dot';
+
+        if (n.group === 'artist') size = 22;
+        if (n.group === 'univ') size = 20;
+        if (n.group === 'genre') size = 24;
+
+        return {
+          id: n.id,
+          label: n.label,
+          group: n.group,
+          original: n,
+          shape: shape,
+          size: size,
+          color: {
+            background: colorConf.background,
+            border: colorConf.border,
+            highlight: {
+              background: '#4f46e5',
+              border: '#312e81'
+            }
+          },
+          font: {
+            face: 'Plus Jakarta Sans, Noto Sans KR, sans-serif',
+            size: 12,
+            color: '#1e293b',
+            strokeWidth: 3,
+            strokeColor: '#ffffff'
+          }
+        };
+      });
+    }
+
+    function formatEdges(edgeList = graphData.edges) {
+      return edgeList.map(e => ({
+        from: e.from,
+        to: e.to,
+        label: e.label,
+        font: { size: 9, color: '#94a3b8', strokeWidth: 2, strokeColor: '#ffffff', align: 'middle' },
+        color: { color: '#cbd5e1', highlight: '#6366f1' },
+        arrows: { to: { enabled: true, scaleFactor: 0.6 } },
+        smooth: { type: 'continuous', roundness: 0.2 }
+      }));
+    }
+
+    function initNetwork() {
+      const data = {
+        nodes: new vis.DataSet(formatNodes()),
+        edges: new vis.DataSet(formatEdges())
+      };
+
+      const options = {
+        physics: {
+          stabilization: { iterations: 150 },
+          barnesHut: {
+            gravitationalConstant: -3800,
+            centralGravity: 0.25,
+            springLength: 95,
+            springConstant: 0.04,
+            damping: 0.09
+          }
+        },
+        interaction: {
+          hover: true,
+          tooltipDelay: 150,
+          zoomView: true,
+          dragView: true
+        }
+      };
+
+      networkInstance = new vis.Network(container, data, options);
+
+      // Node Click Event
+      networkInstance.on("click", function (params) {
+        if (params.nodes.length > 0) {
+          const nodeId = params.nodes[0];
+          const nodeObj = graphData.nodes.find(n => n.id === nodeId);
+          if (nodeObj) displayNodeDetail(nodeObj);
+        } else {
+          resetDetailPanel();
+        }
+      });
+    }
+
+    // Detail Inspector Logic
+    function displayNodeDetail(node) {
+      document.getElementById('detail-empty').classList.add('hidden');
+      const content = document.getElementById('detail-content');
+      content.classList.remove('hidden');
+
+      const badge = document.getElementById('detail-badge');
+      const title = document.getElementById('detail-title');
+      const subtitle = document.getElementById('detail-subtitle');
+      const label1 = document.getElementById('detail-label1');
+      const label2 = document.getElementById('detail-label2');
+      const p1 = document.getElementById('detail-prop1');
+      const p2 = document.getElementById('detail-prop2');
+      const p3 = document.getElementById('detail-prop3');
+      const desc = document.getElementById('detail-desc');
+      const neighborsBox = document.getElementById('detail-neighbors');
+
+      title.textContent = node.label;
+      subtitle.textContent = `온톨로지 클래스: [${node.type}]`;
+      badge.textContent = node.type;
+      badge.style.backgroundColor = (graphData.colors[node.group]?.background || '#64748b') + '25';
+      badge.style.color = graphData.colors[node.group]?.border || '#334155';
+
+      // Connected relations count
+      const connectedEdges = networkInstance ? networkInstance.getConnectedEdges(node.id).length : 0;
+      p3.textContent = `${connectedEdges}개 연결됨`;
+
+      // Fill Attributes based on type
+      if (node.group === 'univ') {
+        label1.textContent = '권역';
+        p1.textContent = node.region || '소재지';
+        label2.textContent = '위치';
+        p2.textContent = node.info?.loc || '-';
+        desc.textContent = node.info?.desc || '대학 정보';
+      } else if (node.group === 'artist') {
+        label1.textContent = '장르';
+        p1.textContent = node.genre || '음악 장르';
+        label2.textContent = '소속';
+        p2.textContent = node.info?.agency || '-';
+        desc.textContent = node.info?.desc || '아티스트 설명';
+      } else if (node.group === 'festival') {
+        label1.textContent = '개최 시기';
+        p1.textContent = node.info?.period || '5월';
+        label2.textContent = '행사 성격';
+        p2.textContent = '대학 정기 대동제/축제';
+        desc.textContent = node.info?.desc || '축제 설명';
+      } else if (node.group === 'genre') {
+        label1.textContent = '대분류';
+        p1.textContent = '음악 스타일 / 장르';
+        label2.textContent = '분류 코드';
+        p2.textContent = node.id;
+        desc.textContent = node.info?.desc || '장르 설명';
+      } else {
+        label1.textContent = '지역 분류';
+        p1.textContent = node.label;
+        label2.textContent = '권역 코드';
+        p2.textContent = node.id;
+        desc.textContent = node.info?.desc || '지역 정보';
+      }
+
+      // Populate Neighbor Nodes
+      neighborsBox.innerHTML = '';
+      if (networkInstance) {
+        const neighborIds = networkInstance.getConnectedNodes(node.id);
+        if (neighborIds.length === 0) {
+          neighborsBox.innerHTML = '<span class="text-xs text-slate-400">인접 연결 없음</span>';
+        } else {
+          neighborIds.forEach(id => {
+            const targetNode = graphData.nodes.find(n => n.id === id);
+            if (targetNode) {
+              const chip = document.createElement('button');
+              chip.className = 'px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 transition-colors border border-slate-200/80';
+              chip.textContent = `${targetNode.label}`;
+              chip.onclick = () => {
+                networkInstance.selectNodes([targetNode.id]);
+                displayNodeDetail(targetNode);
+                networkInstance.focus(targetNode.id, { animation: { duration: 400, easingFunction: 'easeInOutQuad' }, scale: 1.2 });
+              };
+              neighborsBox.appendChild(chip);
+            }
+          });
+        }
+      }
+    }
+
+    function resetDetailPanel() {
+      document.getElementById('detail-empty').classList.remove('hidden');
+      document.getElementById('detail-content').classList.add('hidden');
+      const badge = document.getElementById('detail-badge');
+      badge.textContent = '선택 대기';
+      badge.style.backgroundColor = '#f1f5f9';
+      badge.style.color = '#64748b';
+    }
+
+    // ==========================================
+    // FILTER LOGIC
+    // ==========================================
+    function applyFilters() {
+      let filteredNodes = graphData.nodes.filter(n => {
+        // Genre filter check: affects artists and genres
+        if (selectedGenre !== 'all') {
+          if (n.group === 'genre' && !n.label.includes(selectedGenre)) return false;
+          if (n.group === 'artist' && n.genre !== selectedGenre) return false;
+        }
+
+        // Region filter check: affects universities and regions
+        if (selectedRegion !== 'all') {
+          if (n.group === 'region' && n.label !== selectedRegion) return false;
+          if (n.group === 'univ' && n.region !== selectedRegion) return false;
+        }
+
+        return true;
+      });
+
+      const validNodeIds = new Set(filteredNodes.map(n => n.id));
+
+      // Filter edges that connect valid nodes
+      const filteredEdges = graphData.edges.filter(e => validNodeIds.has(e.from) && validNodeIds.has(e.to));
+
+      // Update vis dataset
+      const nodesDataSet = new vis.DataSet(formatNodes(filteredNodes));
+      const edgesDataSet = new vis.DataSet(formatEdges(filteredEdges));
+
+      networkInstance.setData({ nodes: nodesDataSet, edges: edgesDataSet });
+      resetDetailPanel();
+    }
+
+    // Attach button event listeners
+    document.querySelectorAll('.filter-genre-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-genre-btn').forEach(b => {
+          b.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+          b.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+        });
+        btn.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+        btn.classList.remove('bg-white', 'text-slate-700', 'border');
+        selectedGenre = btn.getAttribute('data-genre');
+        applyFilters();
+      });
+    });
+
+    document.querySelectorAll('.filter-region-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-region-btn').forEach(b => {
+          b.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+          b.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+        });
+        btn.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+        btn.classList.remove('bg-white', 'text-slate-700', 'border');
+        selectedRegion = btn.getAttribute('data-region');
+        applyFilters();
+      });
+    });
+
+    document.getElementById('reset-graph-btn').addEventListener('click', () => {
+      if (networkInstance) {
+        networkInstance.fit({ animation: { duration: 600, easingFunction: 'easeInOutQuad' } });
+      }
+    });
+
+    // Run on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initNetwork();
+    });
+  </script>
+</body>
+</html>

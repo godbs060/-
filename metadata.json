@@ -1,0 +1,6 @@
+{
+  "name": "장해윤 포트폴리오 & FestaGraph",
+  "description": "고려대학교 서어서문학과 장해윤의 디지털인문학 지식그래프(FestaGraph) 및 개인 포트폴리오 웹사이트",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
